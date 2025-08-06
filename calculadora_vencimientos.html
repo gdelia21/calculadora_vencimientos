@@ -76,6 +76,9 @@
                 Días de Vencimiento: <span id="diasVencimiento" class="font-bold text-blue-300 text-2xl"></span>
             </p>
             <p class="text-xl font-semibold text-gray-200 mb-2">
+                Día Juliano: <span id="diaJuliano" class="font-bold text-purple-300 text-2xl"></span>
+            </p>
+            <p class="text-xl font-semibold text-gray-200 mb-2">
                 Fecha de Vencimiento:
             </p>
             <p id="fechaVencimiento" class="text-4xl font-extrabold text-green-400 animate-fade-in"></p>
@@ -147,6 +150,7 @@
         const cervezaSelect = document.getElementById('cerveza');
         const resultadoDiv = document.getElementById('resultado');
         const diasVencimientoSpan = document.getElementById('diasVencimiento');
+        const diaJulianoSpan = document.getElementById('diaJuliano'); // Nuevo elemento para Día Juliano
         const fechaVencimientoSpan = document.getElementById('fechaVencimiento');
         const resetButton = document.getElementById('resetButton');
 
@@ -158,6 +162,14 @@
             const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses son 0-indexados
             const year = date.getFullYear();
             return `${day}/${month}/${year}`;
+        }
+
+        // Calcula el Día Juliano (día del año)
+        function getJulianDay(date) {
+            const startOfYear = new Date(date.getFullYear(), 0, 0);
+            const diff = date - startOfYear;
+            const oneDay = 1000 * 60 * 60 * 24;
+            return Math.floor(diff / oneDay);
         }
 
         // Establece la fecha de hoy en el input de fecha
@@ -204,7 +216,7 @@
             }
         }
 
-        // Calcula y muestra la fecha de vencimiento
+        // Calcula y muestra la fecha de vencimiento y el día Juliano
         function calculateExpiration() {
             const fechaEnvasadoStr = fechaEnvasadoInput.value;
             const selectedEnvase = envaseSelect.value;
@@ -229,6 +241,7 @@
                 fechaVencimiento.setDate(fechaVencimiento.getDate() + diasVencimiento);
 
                 diasVencimientoSpan.textContent = diasVencimiento;
+                diaJulianoSpan.textContent = getJulianDay(fechaEnvasado); // Mostrar Día Juliano
                 fechaVencimientoSpan.textContent = formatDate(fechaVencimiento);
                 resultadoDiv.classList.remove('hidden'); // Mostrar el resultado
             } else {
